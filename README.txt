@@ -1,0 +1,1 @@
+My Gallery v7 - offline package. Open index.html. Images in images/*.webp

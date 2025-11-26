@@ -1,0 +1,34 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const splash = document.getElementById('splash');
+  const app = document.getElementById('app');
+  const themeBtns = document.querySelectorAll('.theme-btn');
+  const resetBtn = document.getElementById('resetBtn');
+  const filterSelect = document.getElementById('filterSelect');
+  const addCategoryBtn = document.getElementById('addCategoryBtn');
+  const newCategoryInput = document.getElementById('newCategoryInput');
+  const fileInput = document.getElementById('fileInput');
+  const addImageBtn = document.getElementById('addImageBtn');
+  const galleries = document.getElementById('galleries');
+  const confirm = document.getElementById('confirm');
+  const noDelete = document.getElementById('noDelete');
+  const yesDelete = document.getElementById('yesDelete');
+  const lightbox = document.getElementById('lightbox');
+  const lbImage = document.getElementById('lbImage');
+  const lbClose = document.getElementById('lbClose');
+  document.body.setAttribute('data-theme','dark');
+  setTimeout(()=>{ splash.style.opacity='0'; splash.setAttribute('aria-hidden','true'); app.setAttribute('aria-hidden','false'); setTimeout(()=>splash.style.display='none',400); }, 2000);
+  const gallerySections = Array.from(document.querySelectorAll('.gallery'));
+  const categories = new Set(gallerySections.map(s => s.dataset.category));
+  function populateFilter(){ filterSelect.innerHTML = '<option value="all">الكل</option>'; categories.forEach(cat => { const opt = document.createElement('option'); opt.value = cat; opt.textContent = cat; filterSelect.appendChild(opt); }); }
+  populateFilter();
+  filterSelect.addEventListener('change', () => { const val = filterSelect.value; gallerySections.forEach(sec => { if(val === 'all') sec.style.display = ''; else sec.style.display = sec.dataset.category === val ? '' : 'none'; }); });
+  addCategoryBtn.addEventListener('click', () => { const name = newCategoryInput.value.trim(); if(!name) return alert('اكتب اسم القسم الجديد'); if(categories.has(name)) return alert('القسم موجود بالفعل'); categories.add(name); const sec = document.createElement('section'); sec.className = 'gallery'; sec.dataset.category = name; sec.innerHTML = `<h2>📁 ${name}</h2><div class='grid' id='grid-${name.replace(/\s+/g,'-')}'></div>`; galleries.appendChild(sec); gallerySections.push(sec); populateFilter(); newCategoryInput.value = ''; });
+  function attachCard(card){ const delBtn = card.querySelector('.del'); if(delBtn){ delBtn.addEventListener('click', (ev) => { ev.stopPropagation(); pendingDelete = card; confirm.setAttribute('aria-hidden','false'); }); } card.addEventListener('click', () => { const src = card.dataset.src || card.querySelector('img').src; lbImage.src = src; document.getElementById('lightbox').setAttribute('aria-hidden','false'); }); }
+  let pendingDelete = null; document.querySelectorAll('.card').forEach(c => attachCard(c));
+  noDelete.addEventListener('click', () => { pendingDelete = null; confirm.setAttribute('aria-hidden','true'); }); yesDelete.addEventListener('click', () => { if(pendingDelete){ pendingDelete.style.transition='opacity .4s, transform .4s'; pendingDelete.style.opacity='0'; pendingDelete.style.transform='scale(.95)'; setTimeout(()=> pendingDelete.remove(),420); } pendingDelete = null; confirm.setAttribute('aria-hidden','true'); });
+  addImageBtn.addEventListener('click', () => { const file = fileInput.files[0]; if(!file) return alert('اختر صورة من جهازك'); let targetCategory = filterSelect.value; const typed = newCategoryInput.value.trim(); if(typed){ if(!categories.has(typed)){ categories.add(typed); const sec = document.createElement('section'); sec.className='gallery'; sec.dataset.category = typed; sec.innerHTML = `<h2>📁 ${typed}</h2><div class='grid' id='grid-${typed.replace(/\s+/g,'-')}'></div>`; galleries.appendChild(sec); gallerySections.push(sec); populateFilter(); } targetCategory = typed; } else if(targetCategory === 'all'){ const p = prompt('اكتب اسم القسم للصورة (سيتم إنشاؤه إن لم يكن موجود)'); if(!p) return; if(!categories.has(p)){ categories.add(p); const sec = document.createElement('section'); sec.className='gallery'; sec.dataset.category = p; sec.innerHTML = `<h2>📁 ${p}</h2><div class='grid' id='grid-${p.replace(/\s+/g,'-')}'></div>`; galleries.appendChild(sec); gallerySections.push(sec); populateFilter(); } targetCategory = p; } const reader = new FileReader(); reader.onload = (e) => { const sec = gallerySections.find(s => s.dataset.category === targetCategory); if(!sec) return alert('فشل في إيجاد القسم'); const grid = sec.querySelector('.grid'); const card = document.createElement('div'); card.className='card'; card.dataset.src = e.target.result; card.dataset.category = targetCategory; card.innerHTML = `<img src="${e.target.result}" alt="${targetCategory}"><button class="del">🗑</button>`; grid.insertBefore(card, grid.firstChild); attachCard(card); if(filterSelect.value !== 'all' && filterSelect.value !== targetCategory){ document.querySelectorAll('.gallery').forEach(s => s.style.display = s.dataset.category === filterSelect.value ? '' : 'none'); } fileInput.value=''; newCategoryInput.value=''; }; reader.readAsDataURL(file); });
+  const initialHTML = { animals: document.getElementById('grid-animals').innerHTML, nature: document.getElementById('grid-nature').innerHTML, cars: document.getElementById('grid-cars').innerHTML }; resetBtn.addEventListener('click', ()=>{ if(!confirm('هل تريد إعادة ضبط المعرض وإزالة الصور المضافة؟')) return; document.getElementById('grid-animals').innerHTML = initialHTML.animals; document.getElementById('grid-nature').innerHTML = initialHTML.nature; document.getElementById('grid-cars').innerHTML = initialHTML.cars; document.querySelectorAll('.gallery').forEach(sec=>{ if(!['animals','nature','cars'].includes(sec.dataset.category)) sec.remove(); }); location.reload(); });
+  themeBtns.forEach(b=> b.addEventListener('click', ()=>{ const t = b.dataset.theme; document.body.setAttribute('data-theme', t); try{ localStorage.setItem('mg-theme', t); }catch(e){} })); try{ const saved = localStorage.getItem('mg-theme'); if(saved) document.body.setAttribute('data-theme', saved); }catch(e){};
+  document.getElementById('lbClose').addEventListener('click', ()=> document.getElementById('lightbox').setAttribute('aria-hidden','true'));
+  document.getElementById('lightbox').addEventListener('click', (e)=>{ if(e.target.id==='lightbox') document.getElementById('lightbox').setAttribute('aria-hidden','true'); });
+});

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>My Gallery</title><link rel="stylesheet" href="styles.css"></head>
+<body data-theme="dark">
+<div id="splash" class="splash" aria-hidden="false"><div class="splash-inner"><div class="splash-logo">My Gallery</div><div class="splash-spinner" role="status"></div></div></div>
+<div id="app" class="app" aria-hidden="true">
+<header class="header"><h1 class="title">معرض الصور</h1><div class="top-actions"><div class="themes"><button class="theme-btn" data-theme="dark">دارك</button><button class="theme-btn" data-theme="light">لايت</button><button class="theme-btn" data-theme="pink">بينك</button></div><button id="resetBtn" class="reset-btn">إعادة ضبط</button></div></header>
+<section class="controls"><div class="left-controls"><label for="filterSelect">اختار قسم:</label><select id="filterSelect"><option value="all">الكل</option></select></div><div class="right-controls"><input id="newCategoryInput" placeholder="اسم قسم جديد (اختياري)"/><input id="fileInput" type="file" accept="image/*"/><button id="addImageBtn">أضف صورة</button><button id="addCategoryBtn">إضافة قسم</button></div></section>
+<main class="galleries" id="galleries">
+<section class="gallery" data-category="animals"><h2>🐾 الحيوانات</h2><div class="grid" id="grid-animals">
+<div class="card" data-src="images/img1.webp" data-category="animals"><img src="images/img1.webp" alt="dog"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img2.webp" data-category="animals"><img src="images/img2.webp" alt="cat"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img3.webp" data-category="animals"><img src="images/img3.webp" alt="bird"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img4.webp" data-category="animals"><img src="images/img4.webp" alt="horse"><button class="del">🗑</button></div>
+</div></section>
+<section class="gallery" data-category="nature"><h2>🌿 مناظر</h2><div class="grid" id="grid-nature">
+<div class="card" data-src="images/img5.webp" data-category="nature"><img src="images/img5.webp" alt="forest"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img6.webp" data-category="nature"><img src="images/img6.webp" alt="waterfall"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img7.webp" data-category="nature"><img src="images/img7.webp" alt="mountain"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img8.webp" data-category="nature"><img src="images/img8.webp" alt="sea"><button class="del">🗑</button></div>
+</div></section>
+<section class="gallery" data-category="cars"><h2>🚗 سيارات</h2><div class="grid" id="grid-cars">
+<div class="card" data-src="images/img9.webp" data-category="cars"><img src="images/img9.webp" alt="sport"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img10.webp" data-category="cars"><img src="images/img10.webp" alt="classic"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img11.webp" data-category="cars"><img src="images/img11.webp" alt="city"><button class="del">🗑</button></div>
+<div class="card" data-src="images/img12.webp" data-category="cars"><img src="images/img12.webp" alt="road"><button class="del">🗑</button></div>
+</div></section>
+</main>
+<div id="lightbox" class="lightbox" aria-hidden="true"><button id="lbClose" class="lb-close">✕</button><div class="lb-content"><img id="lbImage" src="" alt=""><div id="lbCaption"></div></div></div>
+<div id="confirm" class="confirm" aria-hidden="true"><div class="confirm-box"><p>هل أنت متأكد من حذف هذه الصورة؟</p><div class="confirm-actions"><button id="noDelete">لا</button><button id="yesDelete">نعم، احذف</button></div></div></div>
+<footer class="footer">مصمم بواسطة Mostafa</footer></div><script src="app.js"></script></body></html>
